@@ -56,36 +56,33 @@ CREATE TABLE IF NOT EXISTS clientes (
   direccion VARCHAR(255) NULL DEFAULT NULL,
   sucursal VARCHAR(255) NULL DEFAULT NULL,
   correoElectronico VARCHAR(255) NULL DEFAULT NULL,
+ nit VARCHAR(255),
   PRIMARY KEY (clienteId)
 );
 
+
+
 -- Insert data into clientes table
-INSERT INTO clientes (nombre, telefono, direccion, sucursal, correoElectronico)
+INSERT INTO clientes (nombre, telefono, direccion, sucursal, correoElectronico,nit)
 VALUES
-  ('Angie', '12345', 'Direccion1', 'Sucursal1', 'correo_electronico');
+  ('Angie', '12345', 'Direccion1', 'Sucursal1', 'correo_electronico','nit');
 
 -- Create ordenes table with foreign key reference to clientes
 CREATE TABLE IF NOT EXISTS ordenes (
-  ordenId INT NOT NULL AUTO_INCREMENT,
+  ordenId INT PRIMARY KEY AUTO_INCREMENT,
   clienteId INT NOT NULL,
   fechaPedido DATE NULL DEFAULT NULL,
   sucursal VARCHAR(255) NULL DEFAULT NULL,
   total DECIMAL(10,2) NULL DEFAULT NULL,
-  PRIMARY KEY (ordenId),
-  INDEX clienteId (clienteId ASC),
-  CONSTRAINT ordenes_ibfk_1
-    FOREIGN KEY (clienteId)
-    REFERENCES clientes (clienteId)
+  FOREIGN KEY (clienteId) REFERENCES clientes (clienteId)
 );
-   CREATE TABLE IF NOT EXISTS empresa (
-      id INT PRIMARY KEY AUTO_INCREMENT,
-      nombre VARCHAR(255) NOT NULL,
-      nit VARCHAR(255) NOT NULL,
-      direccion VARCHAR(255) NOT NULL,
-      telefono VARCHAR(15),
-      email VARCHAR(255),
-      imagen VARCHAR(255)
-    );
-    INSERT INTO empresa (nombre,nit, direccion, telefono, email,imagen) VALUES
-('Empresa 1','1234556778', 'Calle 123', '123456789', 'empresa1@example.com','https://i.ibb.co/xD21Gr7/Captura-de-pantalla-2023-12-03-193838.png')
 
+-- Tabla para productos seleccionados en una orden
+CREATE TABLE IF NOT EXISTS productos_seleccionados (
+  seleccionId INT PRIMARY KEY AUTO_INCREMENT,
+  ordenId INT NOT NULL,
+  productoId INT NOT NULL,
+  cantidad INT NOT NULL,
+  FOREIGN KEY (ordenId) REFERENCES ordenes (ordenId),
+  FOREIGN KEY (productoId) REFERENCES productos (id)
+);
