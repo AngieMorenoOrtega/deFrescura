@@ -44,8 +44,62 @@ app.get("/productos", (req, res) => {
   });
 });
 
-// Otros manejadores de rutas y configuraciones...
+app.get("/clientes", (req, res) => {
+  // Consultar productos desde la base de datos
+  const consulta = "SELECT * FROM clientes";
 
+  db.query(consulta, (error, resultados) => {
+    if (error) {
+      console.error(
+        "Error al obtener productos desde la base de datos:",
+        error
+      );
+      res.status(500).json({ error: "Error interno del servidor" });
+      return;
+    }
+
+    // Enviar la lista de productos como respuesta
+    res.json(resultados);
+  });
+});
+// Otros manejadores de rutas y configuraciones...
+app.get("/ordenes", (req, res) => {
+  // Consultar productos desde la base de datos
+  const consulta = "SELECT * FROM ordenes";
+
+  db.query(consulta, (error, resultados) => {
+    if (error) {
+      console.error(
+        "Error al obtener productos desde la base de datos:",
+        error
+      );
+      res.status(500).json({ error: "Error interno del servidor" });
+      return;
+    }
+
+    // Enviar la lista de productos como respuesta
+    res.json(resultados);
+  });
+});
+
+app.get("/empresa", (req, res) => {
+  // Consultar productos desde la base de datos
+  const consulta = "SELECT * FROM empresa";
+
+  db.query(consulta, (error, resultados) => {
+    if (error) {
+      console.error(
+        "Error al obtener productos desde la base de datos:",
+        error
+      );
+      res.status(500).json({ error: "Error interno del servidor" });
+      return;
+    }
+
+    // Enviar la lista de productos como respuesta
+    res.json(resultados);
+  });
+});
 // Iniciar el servidor en el puerto 3000
 const PORT = 3001;
 app.listen(PORT, () => {
