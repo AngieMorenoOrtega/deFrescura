@@ -86,3 +86,14 @@ CREATE TABLE IF NOT EXISTS productos_seleccionados (
   FOREIGN KEY (ordenId) REFERENCES ordenes (ordenId),
   FOREIGN KEY (productoId) REFERENCES productos (id)
 );
+   CREATE TABLE IF NOT EXISTS empresa (
+      id INT PRIMARY KEY AUTO_INCREMENT,
+      nombre VARCHAR(255) NOT NULL,
+      nit VARCHAR(255) NOT NULL,
+      direccion VARCHAR(255) NOT NULL,
+      telefono VARCHAR(15),
+      email VARCHAR(255),
+      imagen VARCHAR(255)
+    );
+    INSERT INTO empresa (nombre,nit, direccion, telefono, email,imagen) VALUES
+('Empresa 1','1234556778', 'Calle 123', '123456789', 'empresa1@example.com','https://i.ibb.co/xD21Gr7/Captura-de-pantalla-2023-12-03-193838.png')
