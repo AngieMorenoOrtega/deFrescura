@@ -1,0 +1,26 @@
+{
+  "name": "defrescura",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "Angie Moreno",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.6.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AngieMorenoOrtega/deFrescura.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AngieMorenoOrtega/deFrescura/issues"
+  },
+  "homepage": "https://github.com/AngieMorenoOrtega/deFrescura#readme",
+  "description": ""
+}
