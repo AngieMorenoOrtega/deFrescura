@@ -66,19 +66,21 @@ VALUES
 
 
 CREATE TABLE IF NOT EXISTS ordenes (
-  ordenId INT PRIMARY KEY AUTO_INCREMENT,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   clienteId INT NOT NULL,
-  fechaPedido DATE NULL DEFAULT NULL,
+  fechaPedido VARCHAR(255) NULL DEFAULT NULL,
   sucursal VARCHAR(255) NULL DEFAULT NULL,
   total DECIMAL(10,2) NULL DEFAULT NULL,
   FOREIGN KEY (clienteId) REFERENCES clientes (clienteId)
 );
 CREATE TABLE IF NOT EXISTS productos_seleccionados (
-  seleccionId INT PRIMARY KEY AUTO_INCREMENT,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   ordenId INT NOT NULL,
   productoId INT NOT NULL,
+  nombre VARCHAR(255) NULL DEFAULT NULL,
   cantidad INT NOT NULL,
-  FOREIGN KEY (ordenId) REFERENCES ordenes (ordenId),
+  subtotal DECIMAL(10,2) NULL DEFAULT NULL,
+  FOREIGN KEY (ordenId) REFERENCES ordenes (id),
   FOREIGN KEY (productoId) REFERENCES productos (id)
 );
 
@@ -96,3 +98,4 @@ CREATE TABLE IF NOT EXISTS empresa (
 -- Insert data into empresa table
 INSERT INTO empresa (nombre, nit, direccion, telefono, email, imagen) VALUES
 ('Empresa 1', '1234556778', 'Calle 123', '123456789', 'empresa1@example.com', 'https://i.ibb.co/xD21Gr7/Captura-de-pantalla-2023-12-03-193838.png');
+select * from productos_seleccionados

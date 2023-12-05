@@ -1,13 +1,9 @@
 const express = require("express");
 const mysql = require("mysql");
-const bodyParser = require("body-parser");
 const cors = require("cors");
-
 const app = express();
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
+// Habilitar CORS para todas las rutas
+app.use(express.json());
 app.use(cors({ origin: "http://localhost:3000" }));
 // Configuración de la conexión a la base de datos
 const db = mysql.createConnection({
@@ -102,43 +98,64 @@ app.get("/empresa", (req, res) => {
     res.json(resultados);
   });
 });
-app.post('/ordenes', (req, res) => {
-  // URL a la que se realizará la solicitud POST
-  const urlDestino = 'https://localhost3001/ordenes';
-
-  // Datos que se enviarán en la solicitud POST
-  const datos = req.body;
-
-  // Configuración de la solicitud POST
-  const opciones = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(datos),
-  };
-
-  // Realizar la solicitud POST utilizando node-fetch
-  fetch(urlDestino, opciones)
-    .then(respuesta => {
-      if (!respuesta.ok) {
-        throw new Error(`Error en la solicitud POST. Código de estado: ${respuesta.status}`);
+app.post("/ordenes", (req, res) => {
+  const { clienteId, sucursal, fechaPedido, total, productos } = req.body;
+  console.log(productos);
+  const ordenesQuery =
+    "INSERT INTO ordenes (clienteId, sucursal, fechaPedido, total) VALUES (?, ?, ?, ?)";
+  db.query(
+    ordenesQuery,
+    [clienteId, fechaPedido, sucursal, total],
+    (ordenError, ordenResult) => {
+      if (ordenError) {
+        // Manejar el error
+        console.error("orden error: " + ordenError);
+        res.status(500).send("error en el servidor");
+      } else {
+        const ordenId = ordenResult.insertId;
+        console.log(ordenId);
+        // Ahora, puedes usar ordenId para la inserción en productos_seleccionados
+        const productosSeleccionadosQuery = `
+          INSERT INTO productos_seleccionados (ordenId, productoId, cantidad, nombre,subTotal)
+          VALUES (?, ?, ?, ?,?)
+        `;
+        productos.forEach((element) => {
+          // element.append("ordenId", ordenId);
+          const { productoId, nombre, cantidad, subTotal } = element;
+          db.query(
+            productosSeleccionadosQuery,
+            [ordenId, productoId, cantidad, nombre, subTotal],
+            (productosError) => {
+              if (productosError) {
+                console.error(
+                  "insercion en productos seleccionados fallida: " +
+                    productosError
+                );
+                res.status(500).send("error en el servidor");
+              } else {
+                console.log("Inserción exitosa en productos_seleccionados");
+                res
+                  .status(200)
+                  .json({ message: "Orden insertada correctamente" });
+              }
+            }
+          );
+        });
+        // // Assuming productosSeleccionados is an array of objects with productoId, cantidad, nombre
+        // const productosInsertValues = productos.map(
+        //   ({ productoId, cantidad, nombre, subTotal }) => [
+        //     ordenId, // Utilizar el ordenId obtenido
+        //     productoId,
+        //     cantidad,
+        //     nombre,
+        //     subTotal,
+        //   ]
+        // );
       }
-      return respuesta.json();
-    })
-    .then(data => {
-      // Manejar la respuesta exitosa
-      console.log('Solicitud POST exitosa:', data);
-      res.status(200).json(data);
-    })
-    .catch(error => {
-      // Manejar errores
-      console.error('Error al realizar la solicitud POST:', error.message);
-      res.status(500).json({ error: 'Error en el servidor' });
-    });
+    }
+  );
 });
 
-// Iniciar el servidor en el puerto 3000
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
