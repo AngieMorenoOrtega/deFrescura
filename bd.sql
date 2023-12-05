@@ -1,8 +1,7 @@
 -- Drop existing database if it exists
 DROP DATABASE IF EXISTS productos_db;
-
 -- Create new database
-CREATE DATABASE productos_db;
+CREATE DATABASE IF NOT EXISTS productos_db;
 
 -- Use the new database
 USE productos_db;
@@ -56,18 +55,16 @@ CREATE TABLE IF NOT EXISTS clientes (
   direccion VARCHAR(255) NULL DEFAULT NULL,
   sucursal VARCHAR(255) NULL DEFAULT NULL,
   correoElectronico VARCHAR(255) NULL DEFAULT NULL,
- nit VARCHAR(255),
+  nit VARCHAR(255),
   PRIMARY KEY (clienteId)
 );
 
-
-
 -- Insert data into clientes table
-INSERT INTO clientes (nombre, telefono, direccion, sucursal, correoElectronico,nit)
+INSERT INTO clientes (nombre, telefono, direccion, sucursal, correoElectronico, nit)
 VALUES
-  ('Angie', '12345', 'Direccion1', 'Sucursal1', 'correo_electronico','nit');
+  ('Angie', '12345', 'Direccion1', 'Sucursal1', 'correo_electronico', 'nit');
 
--- Create ordenes table with foreign key reference to clientes
+
 CREATE TABLE IF NOT EXISTS ordenes (
   ordenId INT PRIMARY KEY AUTO_INCREMENT,
   clienteId INT NOT NULL,
@@ -76,8 +73,6 @@ CREATE TABLE IF NOT EXISTS ordenes (
   total DECIMAL(10,2) NULL DEFAULT NULL,
   FOREIGN KEY (clienteId) REFERENCES clientes (clienteId)
 );
-
--- Tabla para productos seleccionados en una orden
 CREATE TABLE IF NOT EXISTS productos_seleccionados (
   seleccionId INT PRIMARY KEY AUTO_INCREMENT,
   ordenId INT NOT NULL,
@@ -86,14 +81,18 @@ CREATE TABLE IF NOT EXISTS productos_seleccionados (
   FOREIGN KEY (ordenId) REFERENCES ordenes (ordenId),
   FOREIGN KEY (productoId) REFERENCES productos (id)
 );
-   CREATE TABLE IF NOT EXISTS empresa (
-      id INT PRIMARY KEY AUTO_INCREMENT,
-      nombre VARCHAR(255) NOT NULL,
-      nit VARCHAR(255) NOT NULL,
-      direccion VARCHAR(255) NOT NULL,
-      telefono VARCHAR(15),
-      email VARCHAR(255),
-      imagen VARCHAR(255)
-    );
-    INSERT INTO empresa (nombre,nit, direccion, telefono, email,imagen) VALUES
-('Empresa 1','1234556778', 'Calle 123', '123456789', 'empresa1@example.com','https://i.ibb.co/xD21Gr7/Captura-de-pantalla-2023-12-03-193838.png')
+
+-- Create empresa table
+CREATE TABLE IF NOT EXISTS empresa (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  nombre VARCHAR(255) NOT NULL,
+  nit VARCHAR(255) NOT NULL,
+  direccion VARCHAR(255) NOT NULL,
+  telefono VARCHAR(15),
+  email VARCHAR(255),
+  imagen VARCHAR(255)
+);
+
+-- Insert data into empresa table
+INSERT INTO empresa (nombre, nit, direccion, telefono, email, imagen) VALUES
+('Empresa 1', '1234556778', 'Calle 123', '123456789', 'empresa1@example.com', 'https://i.ibb.co/xD21Gr7/Captura-de-pantalla-2023-12-03-193838.png');

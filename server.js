@@ -1,10 +1,12 @@
 const express = require("express");
 const mysql = require("mysql");
-
+const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const app = express();
-// Habilitar CORS para todas las rutas
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors({ origin: "http://localhost:3000" }));
 // Configuración de la conexión a la base de datos
@@ -100,6 +102,42 @@ app.get("/empresa", (req, res) => {
     res.json(resultados);
   });
 });
+app.post('/ordenes', (req, res) => {
+  // URL a la que se realizará la solicitud POST
+  const urlDestino = 'https://localhost3001/ordenes';
+
+  // Datos que se enviarán en la solicitud POST
+  const datos = req.body;
+
+  // Configuración de la solicitud POST
+  const opciones = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(datos),
+  };
+
+  // Realizar la solicitud POST utilizando node-fetch
+  fetch(urlDestino, opciones)
+    .then(respuesta => {
+      if (!respuesta.ok) {
+        throw new Error(`Error en la solicitud POST. Código de estado: ${respuesta.status}`);
+      }
+      return respuesta.json();
+    })
+    .then(data => {
+      // Manejar la respuesta exitosa
+      console.log('Solicitud POST exitosa:', data);
+      res.status(200).json(data);
+    })
+    .catch(error => {
+      // Manejar errores
+      console.error('Error al realizar la solicitud POST:', error.message);
+      res.status(500).json({ error: 'Error en el servidor' });
+    });
+});
+
 // Iniciar el servidor en el puerto 3000
 const PORT = 3001;
 app.listen(PORT, () => {
